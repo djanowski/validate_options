@@ -1,0 +1,22 @@
+Gem::Specification.new do |s|
+  s.name = 'validate_options'
+  s.version = '0.0.1'
+  s.summary = %{Hash validation for 'options'-like methods.}
+  s.description = %{}
+  s.date = %q{2008-09-19}
+  s.author = "Damian Janowski"
+  s.email = "damian.janowski@gmail.com"
+
+  s.specification_version = 2 if s.respond_to? :specification_version=
+
+  s.files = <%= FileList['lib/**/*.rb', 'rails/**/*.rb', 'README.rdoc', 'doc/**/*.*'].inspect %>
+
+  s.require_paths = <%= FileList['lib/**'].inject(['lib']) do |require_paths,path|
+    require_paths << path if File.directory?(path) && !require_paths.include?(path)
+    require_paths
+  end.uniq.inspect %>
+
+  s.extra_rdoc_files = ["README.rdoc"]
+  s.has_rdoc = true
+  s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "tti", "--main", "README.rdoc"]
+end

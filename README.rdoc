@@ -1,0 +1,60 @@
+= ValidateOptions
+
+This is a tiny Ruby snippet that provides a smarter way to validate 
+'options'-like hashes (a.k.a. named arguments).
+
+For example:
+
+  require 'validate_options'
+
+  def foo(text, options = {})
+    # Only :align and :color are allowed.
+    validate_options options, :align, :color
+
+    text
+  end
+
+  # Disabled by default.
+  ValidateOptions.enable!
+
+  foo("Hello")
+  # => "Hello"
+
+  foo("Hello", :align => :left)
+  # => "Hello"
+
+  foo("Hello", :colour => :red)
+  # ArgumentError: Invalid options provided: :colour.
+
+Using a block for more fine-grained control over arguments: 
+
+  def bar(text, options = {})
+    validate_options options, :align do |op|
+      raise ":align should be either :left or :right" if op[:align] && ![:left, :right].include?(op[:align])
+    end
+  end
+
+  bar("Hello", :align => :left)
+  # => "Hello"
+
+  bar("Hello", :align => :center)
+  # ArgumentError: :align should be either :left or :right
+
+Valid options can also be specified outside the method:
+
+  class Formatter
+    def print(text, options = {})
+      puts text
+    end
+
+    validate_options_for :print, :align, :color
+  end
+
+  Formatter.new.print("Hello")
+  # => "Hello"
+
+  Formatter.new.print("Hello", :align => :left)
+  # => "Hello"
+
+  Formatter.new.print("Hello", :colour => :red)
+  # ArgumentError: Invalid options provided: :colour.
